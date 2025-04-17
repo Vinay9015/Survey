@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form method="POST">
+    <label for="email">Hawk Email:</label><br>
+    <input type="email" name="email" required><br><br>
+    <button type="submit">Login</button>
+    {% if error %}
+      <p style="color:red;">{{ error }}</p>
+    {% endif %}
+  </form>
+</body>
+</html>
+
+
+

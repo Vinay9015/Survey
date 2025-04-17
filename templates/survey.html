@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Survey</title>
+</head>
+<body>
+  <h2>Survey</h2>
+  <form method="POST" id="survey-form">
+    {% for i in range(6) %}
+      <div>
+        <h3>Q{{ i+1 }}. {{ responses[i].question }}</h3>
+
+        <p>How well do you understand this topic <strong>before</strong> reading the answers? (1–5)</p>
+        <input type="number" name="pre_score_{{i+1}}" min="1" max="5" required>
+
+        <p><strong>Default Model:</strong></p>
+        <div>{{ responses[i].default | safe }}</div>
+
+        <p><strong>Skills-Based Model:</strong></p>
+        <div>{{ responses[i].skills | safe }}</div>
+
+        <p><strong>Hobbies-Based Model:</strong></p>
+        <div>{{ responses[i].hobbies | safe }}</div>
+
+        <p><strong>Subjects-Based Model:</strong></p>
+        <div>{{ responses[i].subjects | safe }}</div>
+
+        <p>Please rank the 4 answers (1 = best, 4 = worst). No duplicate rankings:</p>
+        <label>Default:</label>
+        <select name="rank_1_{{i+1}}" class="rank-group-{{i+1}}" required>
+          <option value="">--Select--</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select><br>
+
+        <label>Skills:</label>
+        <select name="rank_2_{{i+1}}" class="rank-group-{{i+1}}" required>
+          <option value="">--Select--</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select><br>
+
+        <label>Hobbies:</label>
+        <select name="rank_3_{{i+1}}" class="rank-group-{{i+1}}" required>
+          <option value="">--Select--</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select><br>
+
+        <label>Subjects:</label>
+        <select name="rank_4_{{i+1}}" class="rank-group-{{i+1}}" required>
+          <option value="">--Select--</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select><br>
+
+        <p>How well do you understand this topic <strong>after</strong> reading the answers? (1–5)</p>
+        <input type="number" name="post_score_{{i+1}}" min="1" max="5" required>
+
+        <input type="hidden" name="question_id_{{i+1}}" value="{{ responses[i].question_id }}">
+        <hr>
+      </div>
+    {% endfor %}
+    <button type="submit">Submit Survey</button>
+  </form>
+
+  <script>
+    document.querySelector("#survey-form").addEventListener("submit", function(event) {
+      for (let i = 1; i <= 6; i++) {
+        const selects = document.querySelectorAll(`.rank-group-${i}`);
+        const values = Array.from(selects).map(s => s.value);
+
+        if (values.includes("")) {
+          alert(`Question ${i}: All ranks must be selected.`);
+          event.preventDefault();
+          return false;
+        }
+
+        const valueSet = new Set(values);
+        if (valueSet.size < 4) {
+          alert(`Question ${i}: Ranks must be unique (1, 2, 3, 4).`);
+          event.preventDefault();
+          return false;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
