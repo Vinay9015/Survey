@@ -2,75 +2,108 @@
 <html>
 <head>
   <title>Survey</title>
+  <link rel="stylesheet" href="survey.css">
 </head>
 <body>
-  <h2>Survey</h2>
-  <form method="POST" id="survey-form">
-    {% for i in range(6) %}
-      <div>
-        <h3>Q{{ i+1 }}. {{ responses[i].question }}</h3>
+  <div class="container">
+    <h2>Survey</h2>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    
+    <form method="POST" id="survey-form">
+      {% for i in range(6) %}
+        <div class="question-card" id="question-{{i+1}}">
+          <h3>Q{{ i+1 }}. {{ responses[i].question }}</h3>
 
-        <p>How well do you understand this topic <strong>before</strong> reading the answers? (1–5)</p>
-        <input type="number" name="pre_score_{{i+1}}" min="1" max="5" required>
+          <div class="rating-section">
+            <p>How well do you understand this topic <strong>before</strong> reading the answers? (1–5)</p>
+            <div class="number-input">
+              <input type="number" name="pre_score_{{i+1}}" min="1" max="5" required>
+            </div>
+          </div>
 
-        <p><strong>Default Model:</strong></p>
-        <div>{{ responses[i].default | safe }}</div>
+          <div class="response-section">
+            <p><strong>Default Model:</strong></p>
+            <div class="response-content">{{ responses[i].default | safe }}</div>
+          </div>
 
-        <p><strong>Skills-Based Model:</strong></p>
-        <div>{{ responses[i].skills | safe }}</div>
+          <div class="response-section">
+            <p><strong>Skills-Based Model:</strong></p>
+            <div class="response-content">{{ responses[i].skills | safe }}</div>
+          </div>
 
-        <p><strong>Hobbies-Based Model:</strong></p>
-        <div>{{ responses[i].hobbies | safe }}</div>
+          <div class="response-section">
+            <p><strong>Hobbies-Based Model:</strong></p>
+            <div class="response-content">{{ responses[i].hobbies | safe }}</div>
+          </div>
 
-        <p><strong>Subjects-Based Model:</strong></p>
-        <div>{{ responses[i].subjects | safe }}</div>
+          <div class="response-section">
+            <p><strong>Subjects-Based Model:</strong></p>
+            <div class="response-content">{{ responses[i].subjects | safe }}</div>
+          </div>
 
-        <p>Please rank the 4 answers (1 = best, 4 = worst). No duplicate rankings:</p>
-        <label>Default:</label>
-        <select name="rank_1_{{i+1}}" class="rank-group-{{i+1}}" required>
-          <option value="">--Select--</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select><br>
+          <div class="ranking-section">
+            <p>Please rank the 4 answers (1 = best, 4 = worst). No duplicate rankings:</p>
+            
+            <div class="ranking-item">
+              <label>Default:</label>
+              <select name="rank_1_{{i+1}}" class="rank-group-{{i+1}}" required>
+                <option value="">--Select--</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
 
-        <label>Skills:</label>
-        <select name="rank_2_{{i+1}}" class="rank-group-{{i+1}}" required>
-          <option value="">--Select--</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select><br>
+            <div class="ranking-item">
+              <label>Skills:</label>
+              <select name="rank_2_{{i+1}}" class="rank-group-{{i+1}}" required>
+                <option value="">--Select--</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
 
-        <label>Hobbies:</label>
-        <select name="rank_3_{{i+1}}" class="rank-group-{{i+1}}" required>
-          <option value="">--Select--</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select><br>
+            <div class="ranking-item">
+              <label>Hobbies:</label>
+              <select name="rank_3_{{i+1}}" class="rank-group-{{i+1}}" required>
+                <option value="">--Select--</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
 
-        <label>Subjects:</label>
-        <select name="rank_4_{{i+1}}" class="rank-group-{{i+1}}" required>
-          <option value="">--Select--</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select><br>
+            <div class="ranking-item">
+              <label>Subjects:</label>
+              <select name="rank_4_{{i+1}}" class="rank-group-{{i+1}}" required>
+                <option value="">--Select--</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+          </div>
 
-        <p>How well do you understand this topic <strong>after</strong> reading the answers? (1–5)</p>
-        <input type="number" name="post_score_{{i+1}}" min="1" max="5" required>
+          <div class="rating-section">
+            <p>How well do you understand this topic <strong>after</strong> reading the answers? (1–5)</p>
+            <div class="number-input">
+              <input type="number" name="post_score_{{i+1}}" min="1" max="5" required>
+            </div>
+          </div>
 
-        <input type="hidden" name="question_id_{{i+1}}" value="{{ responses[i].question_id }}">
-        <hr>
-      </div>
-    {% endfor %}
-    <button type="submit">Submit Survey</button>
-  </form>
+          <input type="hidden" name="question_id_{{i+1}}" value="{{ responses[i].question_id }}">
+        </div>
+      {% endfor %}
+      <button type="submit">Submit Survey</button>
+    </form>
+  </div>
 
   <script>
     document.querySelector("#survey-form").addEventListener("submit", function(event) {
@@ -92,6 +125,29 @@
         }
       }
     });
+
+    // Update progress as user fills out the form
+    const form = document.getElementById('survey-form');
+    const inputs = form.querySelectorAll('input, select');
+    const totalFields = inputs.length;
+    const progressFill = document.getElementById('progress-fill');
+    
+    function updateProgress() {
+      const filledFields = Array.from(inputs).filter(input => {
+        if (input.type === 'hidden') return true;
+        return input.value !== '';
+      }).length;
+      
+      const progressPercent = (filledFields / totalFields) * 100;
+      progressFill.style.width = `${progressPercent}%`;
+    }
+    
+    inputs.forEach(input => {
+      input.addEventListener('change', updateProgress);
+    });
+    
+    // Initial progress calculation
+    updateProgress();
   </script>
 </body>
 </html>
