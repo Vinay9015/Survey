@@ -185,7 +185,7 @@ button:hover {
     </div>
     
     <form method="POST" id="survey-form">
-      {% for i in range(6) %}
+      {% for i in range(7) %}
         <div class="question-card" id="question-{{i+1}}">
           <h3>Q{{ i+1 }}. {{ responses[i].question }}</h3>
 
@@ -216,8 +216,14 @@ button:hover {
             <div class="response-content">{{ responses[i].subjects | safe }}</div>
           </div>
 
+          <!-- Added the new response type -->
+          <div class="response-section">
+            <p><strong>All(Skills,Hobbies,subjects)-Based Model:</strong></p>
+            <div class="response-content">{{ responses[i].all | safe }}</div>
+          </div>
+
           <div class="ranking-section">
-            <p>Please rank the 4 answers (1 = best, 4 = worst). No duplicate rankings:</p>
+            <p>Please rank the 5 answers (1 = best, 5 = worst). No duplicate rankings:</p>
             
             <div class="ranking-item">
               <label>Default:</label>
@@ -227,6 +233,7 @@ button:hover {
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
+                <option value="5">5</option>
               </select>
             </div>
 
@@ -238,6 +245,7 @@ button:hover {
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
+                <option value="5">5</option>
               </select>
             </div>
 
@@ -249,6 +257,7 @@ button:hover {
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
+                <option value="5">5</option>
               </select>
             </div>
 
@@ -260,8 +269,20 @@ button:hover {
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
+                <option value="5">5</option>
               </select>
             </div>
+          </div>
+          <div class="ranking-item">
+            <label>All:</label>
+            <select name="rank_5_{{i+1}}" class="rank-group-{{i+1}}" required>
+              <option value="">--Select--</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
           </div>
 
           <div class="rating-section">
@@ -280,7 +301,7 @@ button:hover {
 
   <script>
     document.querySelector("#survey-form").addEventListener("submit", function(event) {
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= 7; i++) {
         const selects = document.querySelectorAll(`.rank-group-${i}`);
         const values = Array.from(selects).map(s => s.value);
 

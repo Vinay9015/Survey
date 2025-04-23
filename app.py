@@ -37,17 +37,18 @@ def survey():
     student_id = session['student_id']
 
     if request.method == 'POST':
-        for i in range(1, 7):
+        for i in range(1, 8):
             qid = request.form.get(f'question_id_{i}')
             pre = request.form.get(f'pre_score_{i}')
             post = request.form.get(f'post_score_{i}')
-            ranks = [request.form.get(f'rank_{j}_{i}') for j in range(1, 5)]
+            # adding 5th rank
+            ranks = [request.form.get(f'rank_{j}_{i}') for j in range(1, 6)]
 
             cursor.execute("""
                 INSERT INTO llm_feedback (student_id, question_id, initial_understanding,
                     llm_default_rank, llm_skills_rank, llm_hobbies_rank, llm_subjects_rank,
-                    final_understanding)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    llm_all_rank,final_understanding)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (student_id, qid, pre, *ranks, post))
 
         conn.commit()
@@ -70,25 +71,36 @@ def survey():
     cursor.execute("SELECT * FROM llm_response_subjects WHERE student_id = %s", (student_id,))
     subjects = cursor.fetchone()
 
+    # Fetch data from the new llm_response_all table
+    cursor.execute("SELECT * FROM llm_response_all WHERE student_id = %s", (student_id,))
+    all_responses_data = cursor.fetchone()
+
+    
+
     topic_fields = [
         'java_response',
         'sql_response',
         'data_mining_response',
         'IOT_response',
         'HCI_response',
-        'blockchains_response'
+        'blockchains_response',
+        'coding_response',
     ]
 
     all_responses = []
     for i, q in enumerate(questions):
         qid = q['question_id']
+        # Add a safety check for the index
+        topic_field = topic_fields[i] if i < len(topic_fields) else None
         response = {
             'question': q['question'] if 'question' in q else q.get('qusetion', ''),
             'question_id': qid,
             'default': default_responses.get(qid, ''),
             'skills': markdown.markdown(skills[topic_fields[i]]) if skills else '',
             'hobbies': markdown.markdown(hobbies[topic_fields[i]]) if hobbies else '',
-            'subjects': markdown.markdown(subjects[topic_fields[i]]) if subjects else ''
+            'subjects': markdown.markdown(subjects[topic_fields[i]]) if subjects else '',
+            # Added the response from the new table
+            'all': markdown.markdown(all_responses_data[topic_fields[i]]) if all_responses_data else ''
         }
         all_responses.append(response)
 
